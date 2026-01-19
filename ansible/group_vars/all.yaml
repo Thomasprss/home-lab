@@ -1,0 +1,5 @@
+---
+
+kube_master_ip: 192.168.0.25
+kube_node_101_ip: 192.168.0.19
+kube_node_102_ip: 192.168.0.16

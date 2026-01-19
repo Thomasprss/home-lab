@@ -1,0 +1,23 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+packages:
+  - ansible
+  - git
+  - curl
+  - vim
+  - jq
+  - python3-pip
+  - qemu-guest-agent
+
+runcmd:
+  - ansible --version > /var/log/ansible-installed.log
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  - sudo -u ubuntu ssh-keygen -t ed25519 -f /home/ubuntu/.ssh/ansible -N ""
+  - cat /home/ubuntu/.ssh/ansible.pub > /home/ubuntu/.ssh/authorized_keys
+  - chown -R ubuntu:ubuntu /home/ubuntu/.ssh
+
+final_message: |
+  Ansible master ready.

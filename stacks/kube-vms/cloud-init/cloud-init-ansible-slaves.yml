@@ -1,0 +1,19 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+packages:
+  - python3
+  - python3-apt
+  - qemu-guest-agent
+  - curl
+  - sudo
+
+runcmd:
+  # Activer QEMU Guest Agent
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+
+final_message: |
+  Kube node ready.
+  Waiting for Ansible provisioning.

@@ -1,0 +1,37 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install required system package
+      apt:
+        pkg:
+          - ca-certificates
+          - curl
+          - wget
+          - software-properties-common
+          - gnupg
+          - lsb-release
+          - containerd
+          - dnsutils
+          - chrony
+          - iputils-ping
+        state: latest
+        update_cache: true
+
+    - name: Disable swap
+      command: swapoff -a
+
+    - name: Disable swap permanently, persist reboots
+      replace:
+        path: /etc/fstab
+        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+        replace: '#\1\2\3swap\4'
+        backup: yes
+
+    - name: Mapping hosts
+      ansible.builtin.blockinfile:
+        path: /etc/hosts
+        block: |
+          {{ kube_master_ip }} master.kube.pve.thomas master.kube
+          {{ kube_node_101_ip }} node1.kube.pve.thomas node1.kube
+          {{ kube_node_102_ip }} node2.kube.pve.thomas node2.kube
